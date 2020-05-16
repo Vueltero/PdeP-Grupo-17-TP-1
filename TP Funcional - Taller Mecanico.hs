@@ -49,8 +49,15 @@ data Auto = Auto
 Los strings ("DJ", "NB") deben compararse con
 (<), (<=), (>), (>=)-}
 
---costoReparacion :: Auto -> Int
+estaEntreDJyNB :: Patente-> Bool
+estaEntreDJyNB patente = take 2 patente >= "DJ" && take 2 patente <= "NB"
+
+terminenEn4 :: Patente-> Bool
+terminenEn4 patente = drop 5 patente == "4"
+
+costoReparacion :: Patente-> Int
 costoReparacion patente
-	| (length patente = 7) = 12500
-	| 
-	| otherwise = 15000
+ | (length patente == 7) = 12500
+ | estaEntreDJyNB patente &&  terminenEn4 patente = 3000 * 6
+ | estaEntreDJyNB patente = 20000
+ | otherwise = 15000
