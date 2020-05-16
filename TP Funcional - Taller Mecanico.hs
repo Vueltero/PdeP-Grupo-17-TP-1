@@ -23,41 +23,33 @@ type Fecha = (Int, Int, Int)
 anio :: Fecha -> Int
 anio (_, _, year) = year
 
-data Auto = Auto
-{
-	patente         :: Patente,
-	desgasteLlantas :: [Desgaste],
-	rpm             :: Int,
-	temperaturaAgua :: Int,
-	ultimoArreglo   :: Fecha
+data Auto = Auto {
+ patente         :: Patente,
+ desgasteLlantas :: [Desgaste],
+ rpm             :: Int,
+ temperaturaAgua :: Int,
+ ultimoArreglo   :: Fecha
 } deriving (Show, Eq)
 
 -------------------------------------------------------
 
 --Punto 1 - "Costo de reparación de un auto"
 
-{-●	si la patente tiene 7 dígitos, es $ 12.500
+estaEntreDJyNB :: Patente -> Bool
+estaEntreDJyNB patente =
+ take 2 patente >= "DJ" && take 2 patente <= "NB"
 
-●	si no, si la patente está entre las
-	letras "DJ" y "NB"  , se aplica el calculoPatental
-	○	que es $ 3.000 * la longitud para
-		las patentes que terminen en 4
-	○	o $ 20.000 para el resto de las patentes
-
-●	de lo contrario, se le cobra $ 15000
-
-Los strings ("DJ", "NB") deben compararse con
-(<), (<=), (>), (>=)-}
-
-estaEntreDJyNB :: Patente-> Bool
-estaEntreDJyNB patente = take 2 patente >= "DJ" && take 2 patente <= "NB"
-
-terminenEn4 :: Patente-> Bool
+terminenEn4 :: Patente -> Bool
 terminenEn4 patente = drop 5 patente == "4"
 
-costoReparacion :: Patente-> Int
+costoReparacion :: Patente -> Int
 costoReparacion patente
  | (length patente == 7) = 12500
- | estaEntreDJyNB patente &&  terminenEn4 patente = 3000 * 6
+ | estaEntreDJyNB patente && terminenEn4 patente = 3000*6
  | estaEntreDJyNB patente = 20000
  | otherwise = 15000
+
+-------------------------------------------------------
+
+--Punto 2 - ""
+
