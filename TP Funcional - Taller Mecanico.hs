@@ -33,21 +33,26 @@ data Auto = Auto {
 
 -------------------------------------------------------
 
+-- Dejo este Auto para que se realicen pruebas sin necesidad de definir por consola
+
 --Punto 1 - "Costo de reparación de un auto"
 
-estaEntreDJyNB :: Patente -> Bool
-estaEntreDJyNB patente =
- take 2 patente >= "DJ" && take 2 patente <= "NB"
+prueba = Auto "DFH029" [ 0.5, 0.1, 0.0, 0.2 ] 1500 90 (27, 10, 1997) 
 
-terminenEn4 :: Patente -> Bool
-terminenEn4 patente = drop 5 patente == "4"
+estaEntreDJyNB :: Patente-> Bool
+estaEntreDJyNB patente = take 2 patente >= "DJ" && take 2 patente <= "NB"
 
-costoReparacion :: Patente -> Int
-costoReparacion patente
- | (length patente == 7) = 12500
- | estaEntreDJyNB patente && terminenEn4 patente = 3000*6
- | estaEntreDJyNB patente = 20000
+calculoPatental :: Patente -> Int
+calculoPatental patente
+ | (last patente) == '4' = (length patente) * 3000
+ | otherwise = 20000
+
+costoReparacion :: Auto -> Int
+costoReparacion auto
+ | (length patenteAuto == 7) = 12500
+ | estaEntreDJyNB patenteAuto = calculoPatental patenteAuto
  | otherwise = 15000
+ where patenteAuto = patente auto
 
 -------------------------------------------------------
 
