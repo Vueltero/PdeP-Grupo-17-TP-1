@@ -127,6 +127,7 @@ Ejemplo: 0.2 + 0.5 + 0.6 + 0.1 = 1.4 * 10 = 14. Para determinar si es par o no (
 
 -}
 
+siSoloSi :: Bool -> Bool -> Bool
 siSoloSi True True = True
 siSoloSi False False = True
 siSoloSi _ _ = False
