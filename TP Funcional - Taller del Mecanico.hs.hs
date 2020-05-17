@@ -1,19 +1,16 @@
 module TallerDelMecanico where
 
 
+  
 {-Todo auto tiene
 ●	la patente, que puede tener formato viejo "RVM363"
 o el nuevo "AB808RD"
-
 ●	el desgaste de cada una de las llantas,
 ej: [ 0.5, 0.1, 0.0, 0.2 ]
-
 ●	las revoluciones por minuto a las que regula el
 motor, ej: 1500
-
 ●	la temperatura del agua luego de 5 minutos
 de encendido el auto: 90
-
 ●	la fecha del último arreglo-}
 
 -------------------------------------------------------
@@ -28,7 +25,7 @@ anio (_, _, year) = year
 
 data Auto = Auto {
  patente         :: Patente,
- desgasteLlantas :: [Desgaste], 
+ desgasteLlantas :: [Desgaste],
  rpm             :: Int,
  temperaturaAgua :: Int,
  ultimoArreglo   :: Fecha
@@ -36,39 +33,26 @@ data Auto = Auto {
 
 -------------------------------------------------------
 
--- Punto 1 - "Costo de reparación de un auto"
+-- Dejo este Auto para que se realicen pruebas sin necesidad de definir por consola
 
-{-●	si la patente tiene 7 dígitos, es $ 12.500
+--Punto 1 - "Costo de reparación de un auto"
 
-●	si no, si la patente está entre las
-	letras "DJ" y "NB"  , se aplica el calculoPatental
-	○	que es $ 3.000 * la longitud para
-		las patentes que terminen en 4
-	○	o $ 20.000 para el resto de las patentes
+prueba = Auto "DFH029" [ 0.5, 0.1, 0.1, 0.2 ] 2001 80 (27, 10, 1997) 
 
-●	de lo contrario, se le cobra $ 15000
+estaEntreDJyNB :: Patente-> Bool
+estaEntreDJyNB patente = take 2 patente >= "DJ" && take 2 patente <= "NB"
 
-Los strings ("DJ", "NB") deben compararse con
-(<), (<=), (>), (>=)-}
+calculoPatental :: Patente -> Int
+calculoPatental patente
+ | (last patente) == '4' = (length patente) * 3000
+ | otherwise = 20000
 
---estaEntreDJyNB :: Patente -> Bool
---estaEntreDJyNB = ((>= "DJ").(take 2)) patente && ((<= "NB").(take 2)) patente
-
-estaEntreDJyNB :: Patente -> Bool
-estaEntreDJyNB patente = (entreDJ patente && entreNB patente)
-    where entreDJ = ((>= "DJ").(take 2))
-          entreNB = ((<= "NB").(take 2))
-
-terminenEn4 :: Patente -> Bool
-terminenEn4 = ultimoDigitoEs4
-    where ultimoDigitoEs4 = (== "4").(drop 5)
-
-costoReparacion :: Patente -> Int
-costoReparacion patente
- | (length patente == 7) = 12500
- | estaEntreDJyNB patente &&  terminenEn4 patente = 3000 * 6
- | estaEntreDJyNB patente = 20000
+costoReparacion :: Auto -> Int
+costoReparacion auto
+ | (length patenteAuto == 7) = 12500
+ | estaEntreDJyNB patenteAuto = calculoPatental patenteAuto
  | otherwise = 15000
+ where patenteAuto = patente auto
 
 -------------------------------------------------------
 
@@ -81,7 +65,6 @@ Esta condición se cumple cuando el desgaste de la primera llanta es mayor a 0.5
 B) Necesita revisión.
 Dado un auto, saber si necesita revisión. 
 Esta condición se cumple cuando el último arreglo fue realizado en el año 2015 ó antes. -}
-
 
 autoPeligroso :: [Desgaste] -> Bool
 autoPeligroso = esPeligroso
@@ -103,3 +86,25 @@ necesitaRevision = necesitaArreglo
 ●	Zulu: revisa la temperatura del agua, la deja a 90 y hace lo mismo que Lima (ver a continuación).
 ●	Lima:  cambia las cubiertas delanteras (las dos primeras), dejándolas sin desgaste. Las posteriores quedan igual. -}
 
+alfa :: Auto -> Auto 
+alfa auto = regularAuto auto 
+ where regularAuto auto | (rpm auto) < 2000 = auto 
+                        | otherwise = auto {rpm = 2000}
+
+bravo :: Auto -> Auto 
+bravo auto = cambiarLlantas auto 
+ where cambiarLlantas auto = auto { desgasteLlantas = [0.0, 0.0, 0.0, 0.0 ]}
+
+charly :: Auto -> Auto
+charly auto = (alfa.bravo) auto 
+
+tango :: Auto -> Auto
+tango auto = auto 
+
+lima :: Auto -> Auto
+lima auto = cambiarLlantasDelanteras auto 
+ where cambiarLlantasDelanteras auto = auto { desgasteLlantas = (0.0 : 0.0 : drop 2 (desgasteLlantas auto))}
+
+zulu :: Auto -> Auto
+zulu auto = (cambiarTemperaturaAguaA90.lima) auto 
+ where cambiarTemperaturaAguaA90 auto = auto { temperaturaAgua = 90}
