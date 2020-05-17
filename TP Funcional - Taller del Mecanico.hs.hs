@@ -137,7 +137,7 @@ estaOrdenado 1 (x:xs) = odd x
 estaOrdenado indice (x:xs) = siSoloSi (even indice) (even x) && estaOrdenado (indice - 1) xs
 
 estaOrdenadoToc :: [Auto] -> Bool
-estaOrdenadoToc autos = estaOrdenado (length autos) (map (round.(*10).sum.desgasteLlantas) autos)
+estaOrdenadoToc autos = estaOrdenado (length autos) ((reverse.map (round.(*10).sum.desgasteLlantas)) autos)
 
 -------------------------------------------------------
 
