@@ -35,9 +35,11 @@ data Auto = Auto {
 
 -- Dejo este Auto para que se realicen pruebas sin necesidad de definir por consola
 
---Punto 1 - "Costo de reparación de un auto"
+autoDePrueba = Auto "DFH029" [ 0.5, 0.1, 0.1, 0.2 ] 2001 80 (27, 10, 1997) 
 
-prueba = Auto "DFH029" [ 0.5, 0.1, 0.1, 0.2 ] 2001 80 (27, 10, 1997) 
+
+
+--Punto 1 - "Costo de reparación de un auto"
 
 estaEntreDJyNB :: Patente-> Bool
 estaEntreDJyNB patente = take 2 patente >= "DJ" && take 2 patente <= "NB"
@@ -108,3 +110,41 @@ lima auto = cambiarLlantasDelanteras auto
 zulu :: Auto -> Auto
 zulu auto = (cambiarTemperaturaAguaA90.lima) auto 
  where cambiarTemperaturaAguaA90 auto = auto { temperaturaAgua = 90}
+
+ -------------------------------------------------------
+
+
+{- Punto 4: Ordenamiento TOC de autos
+
+Dada una serie de autos, saber si están ordenados en base al siguiente criterio:
+⦁	los autos ubicados en la posición impar de la lista deben tener una cantidad de desgaste impar
+⦁	los autos ubicados en la posición par de la lista deben tener una cantidad de desgaste par
+
+Nota: asumimos que el primer elemento está en la posición 1, el segundo elemento en la posición 2, etc.
+
+La cantidad de desgaste es la sumatoria de desgastes de las cubiertas de los autos multiplicada por 10. 
+Ejemplo: 0.2 + 0.5 + 0.6 + 0.1 = 1.4 * 10 = 14. Para determinar si es par o no (y evitar errores de redondeo) es conveniente utilizar la función round.
+
+-}
+
+siSoloSi True True = True
+siSoloSi False False = True
+siSoloSi _ _ = False
+
+estaOrdenado :: Int -> [Int] -> Bool
+estaOrdenado 1 (x:xs) = odd x
+estaOrdenado indice (x:xs) = siSoloSi (even indice) (even x) && estaOrdenado (indice - 1) xs
+
+estaOrdenadoToc :: [Auto] -> Bool
+estaOrdenadoToc autos = estaOrdenado (length autos) (map (round.(*10).sum.desgasteLlantas) autos)
+
+-------------------------------------------------------
+
+{- Punto 5: Orden de reparación
+
+Aplicar una orden de reparación, que tiene
+⦁	una fecha
+⦁	una lista de técnicos
+y consiste en que cada uno de los técnicos realice las reparaciones que sabe sobre el auto, al que además hay que actualizarle la última fecha de reparación.
+
+-}
