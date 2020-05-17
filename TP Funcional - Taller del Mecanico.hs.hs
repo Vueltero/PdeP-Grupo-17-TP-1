@@ -149,3 +149,24 @@ Aplicar una orden de reparación, que tiene
 y consiste en que cada uno de los técnicos realice las reparaciones que sabe sobre el auto, al que además hay que actualizarle la última fecha de reparación.
 
 -}
+
+type Mecanico = Auto -> Auto
+type Orden = (Fecha, [Mecanico])
+
+pam :: [(c->b)] -> c -> [b]
+pam lista valor = map ($ valor) lista 
+
+--ordenDeReparación :: Fecha -> [Mecanico] -> Auto -> [Auto]
+--ordenDeReparación fecha lista auto = map ($ auto) lista 
+
+fcAux ::  Auto -> Mecanico -> Auto 
+fcAux auto x = x auto
+
+actualizarUltimoArreglo :: Fecha -> Auto -> Auto
+actualizarUltimoArreglo fecha auto = auto { ultimoArreglo = fecha }   
+
+reparar :: Auto -> [Mecanico] -> Auto
+reparar auto lista = foldl fcAux auto lista
+
+ordenDeReparación :: Orden -> Auto -> Auto
+ordenDeReparación (fecha, lista) auto = actualizarUltimoArreglo fecha (reparar auto lista )
