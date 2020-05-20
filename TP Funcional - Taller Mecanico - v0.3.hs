@@ -49,7 +49,7 @@ ford = UnAuto {
 
 costoDeReparacion :: Auto -> Int
 costoDeReparacion auto | cantidadDigitos 7 (patente auto) = 12500
-                       | estaEntrePalabras "DJ" (patente auto) "NB" = calculoPatental (patente auto)
+                       | estaEntrePalabras "DJ" ((take 2.patente) auto) "NB" = calculoPatental (patente auto)
                        | otherwise = 15000
 
 --patenteTiene7Digitos :: Auto -> Bool
