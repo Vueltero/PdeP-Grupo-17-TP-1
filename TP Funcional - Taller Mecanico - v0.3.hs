@@ -250,7 +250,7 @@ listaTecnicosAutoEnCondiciones :: ListaTecnicos -> Auto -> ListaTecnicos       -
 listaTecnicosAutoEnCondiciones lista auto = map (lista !!) (indicesAutoEnCondiciones auto lista)
 
 indicesAutoEnCondiciones :: Auto -> ListaTecnicos -> [Int]
-indicesAutoEnCondiciones auto tecnicos =  take 1 (findIndices (not.autoPeligroso) (cadaTecnicoUnAuto tecnicos auto) )
+indicesAutoEnCondiciones auto tecnicos = findIndices (not.autoPeligroso) (cadaTecnicoUnAuto tecnicos auto)
 
 cadaTecnicoUnAuto :: ListaTecnicos -> Auto -> ListaAutos
 cadaTecnicoUnAuto tecnicos auto = map ($ auto) (tecnicoReparando tecnicos)         -- lista de cada tecnico trabajando en el auto
