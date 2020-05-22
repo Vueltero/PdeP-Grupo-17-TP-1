@@ -236,6 +236,23 @@ tecnicoReparando tecnicos = map reparacion tecnicos
 modificarFecha :: Fecha -> Auto -> Auto
 modificarFecha fecha auto = auto { ultimoArreglo = fecha }
 
+
+-- Punto 6) Parte 1)
+-- Dada una lista de técnicos determinar aquellos técnicos que dejarían el auto en condiciones,
+-- es decir que no sea peligroso andar.
+
+dejaElAutoEnCondiciones :: Auto -> [Tecnico] -> [Tecnico]
+dejaElAutoEnCondiciones auto = filter (not.autoPeligroso.($ auto).reparacion)
+
+-- Punto 6) Parte 2)
+-- Dada una lista de autos, saber cuál es el costo de reparación de los autos que necesitan revisión.
+
+costoDeReparacionDeAutos :: [Auto] -> [Int]
+costoDeReparacionDeAutos = map costoDeReparacion.filter necesitaRevision
+
+
+{- 
+
 -- Punto 6) Parte 1)
 -- Dada una lista de técnicos determinar aquellos técnicos que dejarían el auto en condiciones,
 -- es decir que no sea peligroso andar.
@@ -255,6 +272,7 @@ indicesAutoEnCondiciones auto tecnicos = findIndices (not.autoPeligroso) (cadaTe
 cadaTecnicoUnAuto :: ListaTecnicos -> Auto -> ListaAutos
 cadaTecnicoUnAuto tecnicos auto = map ($ auto) (tecnicoReparando tecnicos)         -- lista de cada tecnico trabajando en el auto
 
+
 -- Punto 6) Parte 2)
 -- Dada una lista de autos, saber cuál es el costo de reparación de los autos que necesitan revisión.
 
@@ -266,9 +284,38 @@ listaNecesitaRevision lista = map (lista !!) (indicesAutoNecesitaRevision lista)
 
 indicesAutoNecesitaRevision :: ListaAutos -> [Int]
 indicesAutoNecesitaRevision listaAutos = findIndices necesitaRevision listaAutos
+-}
+
+
+
+{-
 
 -- Punto 7) Parte 1)
-{-
+  Si podriamos obtener el primer tecnico  que deja el auto en condiciones, si agreamos take 1 ala funcion dejaElAutoEnCondiciones
+
+
+obtenerPrimerTecnico auto = take 1.dejaElAutoEnCondiciones auto
+
+
+-- Punto 7) Parte 2)
+
+  No podremos saber cual seria el costo de reparacion de los autos que necesitan revision de una lista infinita
+de autos dado que tendriamos que saber de antemano la totalidad de los autos que necesitan revision, y siendo
+una lista infinita siempre podrian aparecer autos que necestien revision.
+  En el caso de tomar en cuenta los 3 primeros autos que necesitan revision la funcion deberia cambiar a:
+
+costoDeRepararPrimerosTresAutos = (take 3.foldr ((+).costoDeReparacion) 0.filter necesitaRevision)
+
+Esta version funcion acepta una lista infinita.
+
+
+
+
+
+
+
+-- Punto 7) Parte 1)
+
   Si podriamos obtener el primer tecnico  que deja el auto en condiciones, si agreamos take 1 a
 la funcion indicesAutoEnCondiciones (que busca los indices de la lista que dice si el auto esta en condicones,
 entonces delimitamos la busqueda al primer encuento)
@@ -280,9 +327,9 @@ indicesAutoEnCondiciones auto tecnicos = take 1 ( findIndices (not.autoPeligroso
 
 *Main> nombreDeTecnicosAutoEnCondiciones pruebaListaTecnicos3 ford 
 ["Zulu"]
--}
+
 -- Punto 7) Parte 2)
-{-
+
   No podremos saber cual seria el costo de reparacion de los autos que necesitan revision de una lista infinita
 de autos dado que tendriamos que saber de antemano la totalidad de los autos que necesitan revision, y siendo
 una lista infinita siempre podrian aparecer autos que necestien revision.
@@ -292,7 +339,7 @@ indicesAutoNecesitaRevision :: ListaAutos -> [ Int ]
 indicesAutoNecesitaRevision listaAutos = take 3 ( findIndices necesitaRevision listaAutos)
 
 Esta version funcion acepta una lista infinita.
--}
+
 
 -- Punto 6) Parte 2) Modificada para el punto 7) Parte 2)
 
@@ -305,3 +352,4 @@ listaNecesitaRevision2 lista = map (lista !!) (indicesAutoNecesitaRevision2 list
 indicesAutoNecesitaRevision2 :: ListaAutos -> [Int]
 indicesAutoNecesitaRevision2 listaAutos = take 3 (findIndices necesitaRevision listaAutos)
 
+-}
