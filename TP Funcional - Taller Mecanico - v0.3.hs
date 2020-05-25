@@ -243,9 +243,6 @@ modificarFecha fecha auto = auto { ultimoArreglo = fecha }
 nombreDeTecnicosAutoEnCondiciones :: ListaTecnicos -> Auto -> [String]      -- nombres de tecnicos que hacen que deje de ser peligroso un auto
 nombreDeTecnicosAutoEnCondiciones tecnicos auto = map nombre ( listaTecnicosAutoEnCondiciones tecnicos auto)
 
---listaTecnicosAutoEnCondiciones :: ListaTecnicos -> Auto -> ListaTecnicos      -- listado de tecnicos que hacen que deje de ser peligroso un auto
---listaTecnicosAutoEnCondiciones tecnicos auto = listarServicios auto tecnicos
-
 listaTecnicosAutoEnCondiciones :: ListaTecnicos -> Auto -> ListaTecnicos       -- listado de tecnicos que hacen que deje de ser peligroso un auto
 listaTecnicosAutoEnCondiciones lista auto = map (lista !!) (indicesAutoEnCondiciones auto lista)
 
