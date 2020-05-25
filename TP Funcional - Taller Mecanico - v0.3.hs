@@ -78,11 +78,14 @@ autoPeligroso = (>0.5).head.desgasteLlantas
 necesitaRevision :: Auto -> Bool
 necesitaRevision = (<=2015).anio.ultimoArreglo
 
+
+{-
 -- Punto 3)
 -- Alfa : hace que el auto regule a 2.000 vueltas, salvo que esté a menos de 2.000 vueltas,
 -- en cuyo caso lo deja como está
+
 alfa :: Auto -> Auto
-alfa auto = auto { rpm = min (rpm auto) 2000}
+alfa auto revoluciones = auto { rpm = min (rpm auto) 2000}
 
 -- Bravo : cambia todas las cubiertas, dejándolas sin desgaste
 bravo :: Auto -> Auto
@@ -112,6 +115,32 @@ quitarLlanta = drop 1
 
 ponerLlanta :: [Desgaste] -> [Desgaste]
 ponerLlanta = (0:)
+
+-}
+
+-- Punto 3)
+-- regularVueltas : hace que el auto regule las vueltas, salvo que esté a menos de 2.000 vueltas
+
+regularVueltas :: Int -> Auto -> Auto
+regularVueltas cantidad auto = auto { rpm = min (rpm auto) cantidad}
+
+-- cambiarCubiertas : cambia todas las cubiertas, segun el parámetro
+cambiarCubiertas :: [Desgaste] -> Auto -> Auto
+cambiarCubiertas desgasteNuevo auto = auto { desgasteLlantas = desgasteNuevo }
+
+
+-- hacerNada : bueno no requiere explicacion (?)
+hacerNada :: Auto -> Auto
+hacerNada = id
+
+-- cambiarTemperatura : cambiar la temperatura del agua a la pasada por parámetro
+cambiarTemperatura :: Int -> Auto -> Auto
+cambiarTemperatura temperaturaNueva auto = auto { temperaturaAgua = temperaturaNueva }
+
+-- cambiarPrimerasCubiertas
+cambiarPrimerasCubiertas :: [Desgaste] -> Auto -> Auto
+cambiarPrimerasCubiertas desgasteNuevo auto = cambiarCubiertas (((desgasteNuevo ++).drop (length desgasteNuevo).desgasteLlantas) auto) auto
+
 
 
 -- Punto 4)
@@ -180,37 +209,37 @@ data Tecnico = UnTecnico {
 tecnicoAlfa :: Tecnico
 tecnicoAlfa = UnTecnico {
  nombre = "Alfa",
- reparacion = alfa
+ reparacion = regularVueltas 2000
 }
 
 tecnicoBravo :: Tecnico
 tecnicoBravo = UnTecnico {
  nombre = "Bravo",
- reparacion = bravo
+ reparacion = cambiarCubiertas [0.0,0.0,0.0,0.0]
 }
 
 tecnicoCharly :: Tecnico
 tecnicoCharly = UnTecnico {
  nombre = "Charly",
- reparacion = charly
+ reparacion = reparacion tecnicoBravo.reparacion tecnicoAlfa
 }
 
 tecnicoTango :: Tecnico
 tecnicoTango = UnTecnico {
  nombre = "Tango",
- reparacion = tango
+ reparacion = hacerNada
 }
 
 tecnicoZulu :: Tecnico
 tecnicoZulu = UnTecnico {
  nombre = "Zulu",
- reparacion = zulu
+ reparacion = reparacion tecnicoLima.cambiarTemperatura 90
 }
 
 tecnicoLima :: Tecnico
 tecnicoLima = UnTecnico {
  nombre = "Lima",
- reparacion = lima
+ reparacion = cambiarPrimerasCubiertas [0.0,0.0]
 }
 
 type ListaTecnicos = [Tecnico]
