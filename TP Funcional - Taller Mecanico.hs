@@ -82,12 +82,16 @@ necesitaRevision = (<= 2015) . anio . ultimoArreglo
 -- Punto 3)
 -- Alfa : hace que el auto regule a 2.000 vueltas, salvo que esté a menos de 2.000 vueltas,
 -- en cuyo caso lo deja como está
+
+mapDesgasteLlantas :: ([ Desgaste ] -> [ Desgaste ]) -> Auto -> Auto
+mapDesgasteLlantas unaFuncion auto = auto { desgasteLlantas = unaFuncion . desgasteLlantas $ auto }
+
 alfa :: Auto -> Auto
 alfa auto = auto { rpm = min (rpm auto) 2000}
 
 -- Bravo : cambia todas las cubiertas, dejándolas sin desgaste
 bravo :: Auto -> Auto
-bravo auto = auto { desgasteLlantas = [0.0, 0.0, 0.0, 0.0] }
+bravo auto = mapDesgasteLlantas (map (*0)) auto     -- bravo auto = auto { desgasteLlantas = [0.0, 0.0, 0.0, 0.0] }
 
 -- Charly : realiza las mismas actividades que Alfa y Bravo
 charly :: Auto -> Auto
@@ -105,8 +109,7 @@ zulu auto = lima auto { temperaturaAgua = 90}
 -- dejándolas sin desgaste. Las posteriores quedan igual
 
 lima :: Auto -> Auto
-lima auto = auto { desgasteLlantas =
- (ponerLlanta.ponerLlanta.quitarLlanta.quitarLlanta.desgasteLlantas) auto }
+lima auto = mapDesgasteLlantas (ponerLlanta.ponerLlanta.quitarLlanta.quitarLlanta) auto  -- lima auto = auto { desgasteLlantas = (ponerLlanta.ponerLlanta.quitarLlanta.quitarLlanta.desgasteLlantas) auto }
 
 quitarLlanta :: [Desgaste] -> [Desgaste]
 quitarLlanta = drop 1
