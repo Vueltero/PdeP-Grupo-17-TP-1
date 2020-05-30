@@ -46,16 +46,18 @@ ford = UnAuto {
  ultimoArreglo = (25, 10, 2015)
 }
 
-
 -- Punto 1)
 
 costoDeReparacion :: Auto -> Int
 costoDeReparacion auto | cantidadDigitos 7 (patente auto) = 12500
-                       | estaEntrePalabras "DJ" ((take 2.patente) auto) "NB" = calculoPatental (patente auto)
+                       | entreDJyNB auto = calculoPatental (patente auto)
                        | otherwise = 15000
 
 cantidadDigitos :: Int -> String -> Bool
 cantidadDigitos cantidad = (== cantidad) . length
+
+entreDJyNB :: Auto -> Bool
+entreDJyNB auto = estaEntrePalabras "DJ" ((take 2.patente) auto) "NB" 
 
 estaEntrePalabras :: String -> String -> String -> Bool
 estaEntrePalabras primerPalabra palabra ultimaPalabra = primerPalabra <= palabra && palabra <= ultimaPalabra
