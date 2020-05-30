@@ -72,12 +72,12 @@ calculoPatental patent | terminaEn '4' patent = 3000 * length patent
 -- Punto 2) A)
 
 autoPeligroso :: Auto -> Bool
-autoPeligroso = (>0.5).head.desgasteLlantas
+autoPeligroso = (> 0.5) . head . desgasteLlantas
 
 -- Punto 2) B)
 
 necesitaRevision :: Auto -> Bool
-necesitaRevision = (<=2015).anio.ultimoArreglo
+necesitaRevision = (<= 2015) . anio . ultimoArreglo
 
 -- Punto 3)
 -- Alfa : hace que el auto regule a 2.000 vueltas, salvo que esté a menos de 2.000 vueltas,
