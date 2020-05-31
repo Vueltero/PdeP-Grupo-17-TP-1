@@ -92,13 +92,13 @@ zulu auto = lima auto { temperaturaAgua = 90}
 -- dejándolas sin desgaste. Las posteriores quedan igual
 
 lima :: Auto -> Auto
-lima auto = mapDesgasteLlantas (ponerLlanta.ponerLlanta.quitarLlanta.quitarLlanta) auto   --lima auto = auto { desgasteLlantas = (ponerLlanta.ponerLlanta.quitarLlanta.quitarLlanta.desgasteLlantas) auto }
+lima auto = mapDesgasteLlantas (ponerLlanta . quitarLlanta) auto   --lima auto = auto { desgasteLlantas = (ponerLlanta.ponerLlanta.quitarLlanta.quitarLlanta.desgasteLlantas) auto }
 
 quitarLlanta :: [Desgaste] -> [Desgaste]
-quitarLlanta = drop 1
+quitarLlanta = drop 2
 
 ponerLlanta :: [Desgaste] -> [Desgaste]
-ponerLlanta = (0:)
+ponerLlanta = ([0,0] ++)
 
 
 -- Punto 4)
