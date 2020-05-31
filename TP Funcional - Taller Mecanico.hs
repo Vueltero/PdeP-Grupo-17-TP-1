@@ -28,20 +28,21 @@ ford :: Auto
 ford = UnAuto "DFH029" [0.51, 0.1, 0.6, 0.4] 1900 95 (25, 10, 2015)
 
 -- Punto 1)
-
+ 
 costoDeReparacion :: Auto -> Int
-costoDeReparacion auto | cantidadDigitos 7 (patente auto) = 12500
-                       | entreDJyNB auto = calculoPatental (patente auto)
+costoDeReparacion auto | cantidadDigitos 7 laPatente = 12500
+                       | patenteEstaEntre "DJ" "NB" laPatente = calculoPatental laPatente
                        | otherwise = 15000
+                       where laPatente = patente auto
 
 cantidadDigitos :: Int -> String -> Bool
 cantidadDigitos cantidad = (== cantidad) . length
 
-entreDJyNB :: Auto -> Bool
-entreDJyNB auto = estaEntrePalabras "DJ" ((take 2.patente) auto) "NB" 
+patenteEstaEntre :: String -> String -> String -> Bool
+patenteEstaEntre inferior superior = estaEntrePalabras inferior superior . take 2
 
 estaEntrePalabras :: String -> String -> String -> Bool
-estaEntrePalabras primerPalabra palabra ultimaPalabra = primerPalabra <= palabra && palabra <= ultimaPalabra
+estaEntrePalabras primerPalabra ultimaPalabra palabra = primerPalabra <= palabra && palabra <= ultimaPalabra
 
 terminaEn :: Char -> String -> Bool
 terminaEn terminacion = (== terminacion).last
@@ -142,14 +143,11 @@ pruebaListaTecnicos2 = cycle pruebaListaTecnicos
 
 type Orden = (Fecha, [Tecnico])
 
-fcAux ::  Auto -> Tecnico -> Auto 
-fcAux auto x = x auto
-
 actualizarUltimoArreglo :: Fecha -> Auto -> Auto
 actualizarUltimoArreglo fecha auto = auto { ultimoArreglo = fecha }   
 
 reparar :: Auto -> [Tecnico] -> Auto
-reparar auto lista = foldl fcAux auto lista
+reparar auto lista = foldr ($) auto lista
 
 ordenDeReparación :: Orden -> Auto -> Auto
 ordenDeReparación (fecha, lista) auto = actualizarUltimoArreglo fecha (reparar auto lista )
