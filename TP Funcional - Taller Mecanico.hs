@@ -3,29 +3,29 @@ module TallerDelMecanico where
 import Text.Show.Functions()
 
 type Desgaste = Float
-type Patente = String
-type Fecha = (Int, Int, Int)
+type Patente  = String
+type Fecha    = (Int, Int, Int)
 
 -- Definiciones base
 anio :: Fecha -> Int
 anio (_, _, year) = year
 
 data Auto = UnAuto {
- patente :: Patente,
+ patente         :: Patente,
  desgasteLlantas :: [Desgaste],
- rpm :: Int,
+ rpm             :: Int,
  temperaturaAgua :: Int,
- ultimoArreglo :: Fecha
+ ultimoArreglo   :: Fecha
 } deriving (Show, Eq)
 
 honda :: Auto
 honda = UnAuto "AT001LN" [0.5, 0.1, 0.0, 0.2] 2500 95 (25, 10, 2019)
 
 fiat :: Auto
-fiat = UnAuto "DJV214" [0.50, 0.1, 0.6, 0.4] 1500 90 (04, 05, 2016)
+fiat  = UnAuto "DJV214" [0.50, 0.1, 0.6, 0.4] 1500 90 (04, 05, 2016)
 
 ford :: Auto
-ford = UnAuto "DFH029" [0.51, 0.1, 0.6, 0.4] 1900 95 (25, 10, 2015)
+ford  = UnAuto "DFH029" [0.51, 0.1, 0.6, 0.4] 1900 95 (25, 10, 2015)
 
 -- Punto 1)
  
@@ -45,7 +45,7 @@ estaEntrePalabras :: String -> String -> String -> Bool
 estaEntrePalabras primerPalabra ultimaPalabra palabra = primerPalabra <= palabra && palabra <= ultimaPalabra
 
 terminaEn :: Char -> String -> Bool
-terminaEn terminacion = (== terminacion).last
+terminaEn terminacion = (== terminacion) . last
 
 calculoPatental :: Patente -> Int
 calculoPatental patent | terminaEn '4' patent = 3000 * length patent
@@ -69,29 +69,29 @@ necesitaRevision = (<= 2015) . anio . ultimoArreglo
 mapDesgasteLlantas :: ([ Desgaste ] -> [ Desgaste ]) -> Auto -> Auto
 mapDesgasteLlantas unaFuncion auto = auto { desgasteLlantas = unaFuncion . desgasteLlantas $ auto }
 
-alfa :: Auto -> Auto
+alfa :: Tecnico
 alfa auto = auto { rpm = min (rpm auto) 2000}
 
 -- Bravo : cambia todas las cubiertas, dejándolas sin desgaste
-bravo :: Auto -> Auto
+bravo :: Tecnico
 bravo auto = mapDesgasteLlantas (map (*0)) auto      --bravo auto = auto { desgasteLlantas = [0.0, 0.0, 0.0, 0.0] }
 
 -- Charly : realiza las mismas actividades que Alfa y Bravo
-charly :: Auto -> Auto
+charly :: Tecnico
 charly = bravo.alfa
 
 -- Tango : le gusta decir que hizo muchas cosas pero en realidad no hace ningún arreglo
-tango :: Auto -> Auto
+tango :: Tecnico
 tango = id
 
 -- Zulu : revisa la temperatura del agua, la deja a 90 y hace lo mismo que Lima (ver a continuación)
-zulu :: Auto -> Auto
+zulu :: Tecnico
 zulu auto = lima auto { temperaturaAgua = 90}
 
 -- Lima : cambia las cubiertas delanteras (las dos primeras),
 -- dejándolas sin desgaste. Las posteriores quedan igual
 
-lima :: Auto -> Auto
+lima :: Tecnico
 lima auto = mapDesgasteLlantas (ponerLlanta . quitarLlanta) auto   --lima auto = auto { desgasteLlantas = (ponerLlanta.ponerLlanta.quitarLlanta.quitarLlanta.desgasteLlantas) auto }
 
 quitarLlanta :: [Desgaste] -> [Desgaste]
@@ -127,7 +127,7 @@ ordenamientoTOC [auto] = odd (cantidadDesgaste auto)
 ordenamientoTOC (auto1 : auto2 : autos) = odd (cantidadDesgaste auto1) && even (cantidadDesgaste auto2) && ordenamientoTOC autos
 
 cantidadDesgaste :: Auto -> Int
-cantidadDesgaste  = round.(*10).sum.desgasteLlantas
+cantidadDesgaste  = round . (*10) . sum . desgasteLlantas
 
 -- Punto 5)
 
@@ -147,10 +147,10 @@ actualizarUltimoArreglo :: Fecha -> Auto -> Auto
 actualizarUltimoArreglo fecha auto = auto { ultimoArreglo = fecha }   
 
 reparar :: Auto -> [Tecnico] -> Auto
-reparar auto lista = foldr ($) auto lista
+reparar auto tecnicos = foldr ($) auto tecnicos
 
 ordenDeReparación :: Orden -> Auto -> Auto
-ordenDeReparación (fecha, lista) auto = actualizarUltimoArreglo fecha (reparar auto lista )
+ordenDeReparación (fecha, tecnicos) auto = actualizarUltimoArreglo fecha (reparar auto tecnicos )
 
 --_________________________________________________________________________________________
 
@@ -193,5 +193,5 @@ Interrupted.
 -- Punto 6) Parte 2) Modificada para el punto 7) Parte 2)
 
 costoReparacionNecesitaRevision2 :: [ Auto ] -> Int
-costoReparacionNecesitaRevision2 autos = ( sum . map costoDeReparacion . take 3 . filter necesitaRevision) autos
+costoReparacionNecesitaRevision2 autos = (sum . map costoDeReparacion . take 3 . filter necesitaRevision) autos
 
