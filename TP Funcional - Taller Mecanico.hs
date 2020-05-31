@@ -1,7 +1,6 @@
 module TallerDelMecanico where
 
 import Text.Show.Functions()
-import Data.List
 
 type Desgaste = Float
 type Patente = String
@@ -20,47 +19,30 @@ data Auto = UnAuto {
 } deriving (Show, Eq)
 
 honda :: Auto
-honda = UnAuto {
- patente = "AT001LN",
- desgasteLlantas = [0.5, 0.1, 0.0, 0.2],
- rpm = 2500,
- temperaturaAgua = 95,
- ultimoArreglo = (25, 10, 2019)
-}
+honda = UnAuto "AT001LN" [0.5, 0.1, 0.0, 0.2] 2500 95 (25, 10, 2019)
 
 fiat :: Auto
-fiat = UnAuto {
- patente = "DJV214",
- desgasteLlantas = [0.50, 0.1, 0.6, 0.4],
- rpm = 1500,
- temperaturaAgua = 90,
- ultimoArreglo = (04, 05, 2016)
-}
+fiat = UnAuto "DJV214" [0.50, 0.1, 0.6, 0.4] 1500 90 (04, 05, 2016)
 
 ford :: Auto
-ford = UnAuto {
- patente = "DFH029",
- desgasteLlantas = [0.51, 0.1, 0.6, 0.4],
- rpm = 1900,
- temperaturaAgua = 95,
- ultimoArreglo = (25, 10, 2015)
-}
+ford = UnAuto "DFH029" [0.51, 0.1, 0.6, 0.4] 1900 95 (25, 10, 2015)
 
 -- Punto 1)
-
+ 
 costoDeReparacion :: Auto -> Int
-costoDeReparacion auto | cantidadDigitos 7 (patente auto) = 12500
-                       | entreDJyNB auto = calculoPatental (patente auto)
+costoDeReparacion auto | cantidadDigitos 7 laPatente = 12500
+                       | patenteEstaEntre "DJ" "NB" laPatente = calculoPatental laPatente
                        | otherwise = 15000
+                       where laPatente = patente auto
 
 cantidadDigitos :: Int -> String -> Bool
 cantidadDigitos cantidad = (== cantidad) . length
 
-entreDJyNB :: Auto -> Bool
-entreDJyNB auto = estaEntrePalabras "DJ" ((take 2.patente) auto) "NB" 
+patenteEstaEntre :: String -> String -> String -> Bool
+patenteEstaEntre inferior superior = estaEntrePalabras inferior superior . take 2
 
 estaEntrePalabras :: String -> String -> String -> Bool
-estaEntrePalabras primerPalabra palabra ultimaPalabra = primerPalabra <= palabra && palabra <= ultimaPalabra
+estaEntrePalabras primerPalabra ultimaPalabra palabra = primerPalabra <= palabra && palabra <= ultimaPalabra
 
 terminaEn :: Char -> String -> Bool
 terminaEn terminacion = (== terminacion).last
@@ -68,6 +50,7 @@ terminaEn terminacion = (== terminacion).last
 calculoPatental :: Patente -> Int
 calculoPatental patent | terminaEn '4' patent = 3000 * length patent
                        | otherwise = 20000
+
 
 -- Punto 2) A)
 
@@ -79,10 +62,10 @@ autoPeligroso = (> 0.5) . head . desgasteLlantas
 necesitaRevision :: Auto -> Bool
 necesitaRevision = (<= 2015) . anio . ultimoArreglo
 
+
 -- Punto 3)
 -- Alfa : hace que el auto regule a 2.000 vueltas, salvo que esté a menos de 2.000 vueltas,
 -- en cuyo caso lo deja como está
-
 mapDesgasteLlantas :: ([ Desgaste ] -> [ Desgaste ]) -> Auto -> Auto
 mapDesgasteLlantas unaFuncion auto = auto { desgasteLlantas = unaFuncion . desgasteLlantas $ auto }
 
@@ -91,7 +74,7 @@ alfa auto = auto { rpm = min (rpm auto) 2000}
 
 -- Bravo : cambia todas las cubiertas, dejándolas sin desgaste
 bravo :: Auto -> Auto
-bravo auto = mapDesgasteLlantas (map (*0)) auto     -- bravo auto = auto { desgasteLlantas = [0.0, 0.0, 0.0, 0.0] }
+bravo auto = mapDesgasteLlantas (map (*0)) auto      --bravo auto = auto { desgasteLlantas = [0.0, 0.0, 0.0, 0.0] }
 
 -- Charly : realiza las mismas actividades que Alfa y Bravo
 charly :: Auto -> Auto
@@ -109,180 +92,106 @@ zulu auto = lima auto { temperaturaAgua = 90}
 -- dejándolas sin desgaste. Las posteriores quedan igual
 
 lima :: Auto -> Auto
-lima auto = mapDesgasteLlantas (ponerLlanta.ponerLlanta.quitarLlanta.quitarLlanta) auto  -- lima auto = auto { desgasteLlantas = (ponerLlanta.ponerLlanta.quitarLlanta.quitarLlanta.desgasteLlantas) auto }
+lima auto = mapDesgasteLlantas (ponerLlanta . quitarLlanta) auto   --lima auto = auto { desgasteLlantas = (ponerLlanta.ponerLlanta.quitarLlanta.quitarLlanta.desgasteLlantas) auto }
 
 quitarLlanta :: [Desgaste] -> [Desgaste]
-quitarLlanta = drop 1
+quitarLlanta = drop 2
 
 ponerLlanta :: [Desgaste] -> [Desgaste]
-ponerLlanta = (0:)
+ponerLlanta = ([0,0] ++)
 
 
 -- Punto 4)
 -- autoPrueba1, autoPrueba2 y autoPrueba3 son para probar el punto 4)
 
 autoPrueba1 :: Auto
-autoPrueba1 = UnAuto {
- patente = "DJV215",
- desgasteLlantas = [0.1, 0.3, 0.2, 0.1],
- rpm = 1500,
- temperaturaAgua = 90,
- ultimoArreglo = (04, 05, 2016)
-}
+autoPrueba1 = UnAuto "DJV215" [0.1, 0.3, 0.2, 0.1] 1500 90 (04, 05, 2016)
 
 autoPrueba2 :: Auto
-autoPrueba2 = UnAuto {
- patente = "AT001LN",
- desgasteLlantas = [0.3, 0.5, 0.6, 0.2],
- rpm = 1500,
- temperaturaAgua = 90,
- ultimoArreglo = (04, 05, 2015)
-}
+autoPrueba2 = UnAuto "AT001LN" [0.3, 0.5, 0.6, 0.2] 1500 90 (04, 05, 2015)
 
 autoPrueba3 :: Auto
-autoPrueba3 = UnAuto {
- patente = "DFH029",
- desgasteLlantas = [0.1, 0.1, 0.1, 0],
- rpm = 1500,
- temperaturaAgua = 90,
- ultimoArreglo = (04, 05, 2014)
-}
+autoPrueba3 = UnAuto "DFH029" [0.1, 0.1, 0.1, 0] 1500 90 (04, 05, 2014)
 
+--type Autos = [ Auto ]  -- Sacarlo
+pruebaListaAutos :: [ Auto ]
+pruebaListaAutos = [autoPrueba1, autoPrueba2, autoPrueba3]
+
+pruebaListaAutos2 :: [ Auto ]             -- es una lista infinita
+pruebaListaAutos2 = cycle pruebaListaAutos      -- pruebaListaAutos2 = autoPrueba1 : autoPrueba2 : autoPrueba3 : pruebaListaAutos2
+
+
+ordenamientoTOC :: [ Auto ] -> Bool
 ordenamientoTOC [] = True
-ordenamiento [auto] = odd (cantidadDesgaste auto)
-ordenamientoTOC (auto1:auto2:autos) =
- odd (cantidadDesgaste auto1) && even (cantidadDesgaste auto2)
- && ordenaminetoTOC autos
+ordenamientoTOC [auto] = odd (cantidadDesgaste auto)
+ordenamientoTOC (auto1 : auto2 : autos) = odd (cantidadDesgaste auto1) && even (cantidadDesgaste auto2) && ordenamientoTOC autos
+
+cantidadDesgaste :: Auto -> Int
+cantidadDesgaste  = round.(*10).sum.desgasteLlantas
 
 -- Punto 5)
 
-data Tecnico = UnTecnico {
-  nombre :: String,
-  reparacion :: Auto -> Auto
-} deriving (Show)
+type Tecnico = Auto -> Auto
+pruebaListaTecnicos :: [ Tecnico ]
+pruebaListaTecnicos = [ alfa, bravo, charly, tango, zulu, lima ]
 
-tecnicoAlfa :: Tecnico
-tecnicoAlfa = UnTecnico {
- nombre = "Alfa",
- reparacion = alfa
-}
+pruebaListaTecnicos2 :: [ Tecnico ]                         -- lista infinita
+pruebaListaTecnicos2 = cycle pruebaListaTecnicos
 
-tecnicoBravo :: Tecnico
-tecnicoBravo = UnTecnico {
- nombre = "Bravo",
- reparacion = bravo
-}
 
-tecnicoCharly :: Tecnico
-tecnicoCharly = UnTecnico {
- nombre = "Charly",
- reparacion = charly
-}
+--type Mecanico = Auto -> Auto
 
-tecnicoTango :: Tecnico
-tecnicoTango = UnTecnico {
- nombre = "Tango",
- reparacion = tango
-}
+type Orden = (Fecha, [Tecnico])
 
-tecnicoZulu :: Tecnico
-tecnicoZulu = UnTecnico {
- nombre = "Zulu",
- reparacion = zulu
-}
+actualizarUltimoArreglo :: Fecha -> Auto -> Auto
+actualizarUltimoArreglo fecha auto = auto { ultimoArreglo = fecha }   
 
-tecnicoLima :: Tecnico
-tecnicoLima = UnTecnico {
- nombre = "Lima",
- reparacion = lima
-}
+reparar :: Auto -> [Tecnico] -> Auto
+reparar auto lista = foldr ($) auto lista
 
-type ListaTecnicos = [Tecnico]
+ordenDeReparación :: Orden -> Auto -> Auto
+ordenDeReparación (fecha, lista) auto = actualizarUltimoArreglo fecha (reparar auto lista )
 
-pruebaListaTecnicos :: ListaTecnicos
-pruebaListaTecnicos = [tecnicoAlfa, tecnicoBravo, tecnicoCharly, tecnicoTango, tecnicoZulu, tecnicoLima]
-
-pruebaListaTecnicos2 :: ListaTecnicos
-pruebaListaTecnicos2 = [tecnicoAlfa, tecnicoTango, tecnicoZulu, tecnicoLima]
-
-pruebaListaTecnicos3 :: ListaTecnicos                         -- lista infinita
-pruebaListaTecnicos3 = tecnicoAlfa : tecnicoTango : tecnicoZulu : tecnicoLima : pruebaListaTecnicos3
-
-ordenDeReparacion :: Fecha -> ListaTecnicos -> Auto -> Auto
-ordenDeReparacion fecha tecnicos = (modificarFecha fecha . reparacionTecnicos tecnicos)
-
-reparacionTecnicos :: ListaTecnicos -> Auto -> Auto             -- conjunto de tecnicos reparando un auto
-reparacionTecnicos  tecnicos auto = foldr ($) auto (tecnicoReparando tecnicos)
-
-tecnicoReparando :: ListaTecnicos -> [Auto -> Auto]           -- lista que contiene tecnicos reparando
-tecnicoReparando tecnicos = map reparacion tecnicos
-
-modificarFecha :: Fecha -> Auto -> Auto
-modificarFecha fecha auto = auto { ultimoArreglo = fecha }
+--_________________________________________________________________________________________
 
 -- Punto 6) Parte 1)
 -- Dada una lista de técnicos determinar aquellos técnicos que dejarían el auto en condiciones,
 -- es decir que no sea peligroso andar.
 
-nombreDeTecnicosAutoEnCondiciones :: ListaTecnicos -> Auto -> [String]      -- nombres de tecnicos que hacen que deje de ser peligroso un auto
-nombreDeTecnicosAutoEnCondiciones tecnicos auto = map nombre ( listaTecnicosAutoEnCondiciones tecnicos auto)
-
-listaTecnicosAutoEnCondiciones :: ListaTecnicos -> Auto -> ListaTecnicos       -- listado de tecnicos que hacen que deje de ser peligroso un auto
-listaTecnicosAutoEnCondiciones lista auto = map (lista !!) (indicesAutoEnCondiciones auto lista)
-
-indicesAutoEnCondiciones :: Auto -> ListaTecnicos -> [Int]
-indicesAutoEnCondiciones auto tecnicos = findIndices (not.autoPeligroso) (cadaTecnicoUnAuto tecnicos auto)
-
-cadaTecnicoUnAuto :: ListaTecnicos -> Auto -> ListaAutos
-cadaTecnicoUnAuto tecnicos auto = map ($ auto) (tecnicoReparando tecnicos)         -- lista de cada tecnico trabajando en el auto
+listaTecnicosAutoEnCondiciones :: [Tecnico] -> Auto -> [Tecnico]       -- listado de tecnicos que hacen que deje de ser peligroso un auto
+listaTecnicosAutoEnCondiciones tecnicos auto = filter (not . autoPeligroso . ($ auto)) tecnicos
 
 -- Punto 6) Parte 2)
 -- Dada una lista de autos, saber cuál es el costo de reparación de los autos que necesitan revisión.
 
-costoReparacionNecesitaRevision :: ListaAutos -> [Int]            -- listado de costos de autos que necesitan revision
-costoReparacionNecesitaRevision lista = map (costoDeReparacion) (listaNecesitaRevision lista)
-
-listaNecesitaRevision :: ListaAutos -> ListaAutos
-listaNecesitaRevision lista = map (lista !!) (indicesAutoNecesitaRevision lista)
-
-indicesAutoNecesitaRevision :: ListaAutos -> [Int]
-indicesAutoNecesitaRevision listaAutos = findIndices necesitaRevision listaAutos
+costoReparacionNecesitaRevision :: [ Auto ] -> Int
+costoReparacionNecesitaRevision autos = ( sum . map costoDeReparacion . filter necesitaRevision) autos
 
 -- Punto 7) Parte 1)
 {-
-  Si podriamos obtener el primer tecnico  que deja el auto en condiciones, si agreamos take 1 a
-la funcion indicesAutoEnCondiciones (que busca los indices de la lista que dice si el auto esta en condicones,
-entonces delimitamos la busqueda al primer encuento)
-
-indicesAutoEnCondiciones :: Auto -> ListaTecnicos -> [ Int ]
-indicesAutoEnCondiciones auto tecnicos = take 1 ( findIndices (not.autoPeligroso) (cadaTecnicoUnAuto tecnicos auto) )
+  Si podriamos obtener el primer tecnico  que deja el auto en condiciones, si aplicamos la funcion head a
+la funcion listaTecnicosAutoEnCondiciones
 
   ejemplo: (pruebaListaTecnicos3 es una lista infinita)
 
-*Main> nombreDeTecnicosAutoEnCondiciones pruebaListaTecnicos3 ford 
-["Zulu"]
+*TallerDelMecanico> (head . listaTecnicosAutoEnCondiciones pruebaListaTecnicos2) ford
 -}
 -- Punto 7) Parte 2)
 {-
   No podremos saber cual seria el costo de reparacion de los autos que necesitan revision de una lista infinita
 de autos dado que tendriamos que saber de antemano la totalidad de los autos que necesitan revision, y siendo
 una lista infinita siempre podrian aparecer autos que necestien revision.
+
+ejemplo: (pruebaListaAutos2 es una lista infinita)
+*TallerDelMecanico> costoReparacionNecesitaRevision pruebaListaAutos2      -- apretamos CTRL + C para interrumpir el ciclo infinito
+Interrupted.
+
   En el caso de tomar en cuenta los 3 primeros autos que necesitan revision la funcion deberia cambiar a:
 
-indicesAutoNecesitaRevision :: ListaAutos -> [ Int ]
-indicesAutoNecesitaRevision listaAutos = take 3 ( findIndices necesitaRevision listaAutos)
-
-Esta version funcion acepta una lista infinita.
 -}
 
 -- Punto 6) Parte 2) Modificada para el punto 7) Parte 2)
 
-costoReparacionNecesitaRevision2 :: ListaAutos -> [Int]            -- listado de costos de autos que necesitan revision
-costoReparacionNecesitaRevision2 lista = map (costoDeReparacion) (listaNecesitaRevision2 lista)
-
-listaNecesitaRevision2 :: ListaAutos -> ListaAutos
-listaNecesitaRevision2 lista = map (lista !!) (indicesAutoNecesitaRevision2 lista)
-
-indicesAutoNecesitaRevision2 :: ListaAutos -> [Int]
-indicesAutoNecesitaRevision2 listaAutos = take 3 (findIndices necesitaRevision listaAutos)
+costoReparacionNecesitaRevision2 :: [ Auto ] -> Int
+costoReparacionNecesitaRevision2 autos = ( sum . map costoDeReparacion . take 3 . filter necesitaRevision) autos
 
