@@ -148,31 +148,11 @@ autoPrueba3 = UnAuto {
  ultimoArreglo = (04, 05, 2014)
 }
 
-type ListaAutos = [ Auto ]
-
-pruebaListaAutos :: ListaAutos
-pruebaListaAutos = [autoPrueba1, autoPrueba2, autoPrueba3]
-
-pruebaListaAutos2 :: ListaAutos             -- es una lista infinita
-pruebaListaAutos2 = autoPrueba1 : autoPrueba2 : autoPrueba3 : pruebaListaAutos2
-
-ordenamientoTOC :: ListaAutos -> Bool
-ordenamientoTOC lista = desgastePar lista && desgasteImpar lista
-
-cantidadDesgaste :: [ Desgaste ] -> Int
-cantidadDesgaste  = round.(*10).sum
-
-desgastePar :: ListaAutos -> Bool                       -- compara si los componentes pares tienen un desgaste par
-desgastePar lista = all (even.cantidadDesgaste.desgasteLlantas) (listaIndicePar lista)
-
-desgasteImpar :: ListaAutos -> Bool                     -- compara si los componentes impares tienen un desgaste impar
-desgasteImpar lista = all (odd.cantidadDesgaste.desgasteLlantas) (listaIndiceImpar lista)
-
-listaIndicePar :: ListaAutos -> ListaAutos                      -- saca los componentes pares del listado de autos
-listaIndicePar lista = map (lista!!) [1,3..length lista - 1]
-
-listaIndiceImpar :: ListaAutos -> ListaAutos                    -- saca los componentes impares del listado de autos
-listaIndiceImpar lista = map (lista!!) [0,2..length lista - 1]
+ordenamientoTOC [] = True
+ordenamiento [auto] = odd (cantidadDesgaste auto)
+ordenamientoTOC (auto1:auto2:autos) =
+ odd (cantidadDesgaste auto1) && even (cantidadDesgaste auto2)
+ && ordenaminetoTOC autos
 
 -- Punto 5)
 
