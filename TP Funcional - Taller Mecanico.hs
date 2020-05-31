@@ -19,32 +19,13 @@ data Auto = UnAuto {
 } deriving (Show, Eq)
 
 honda :: Auto
-honda = UnAuto {
- patente = "AT001LN",
- desgasteLlantas = [0.5, 0.1, 0.0, 0.2],
- rpm = 2500,
- temperaturaAgua = 95,
- ultimoArreglo = (25, 10, 2019)
-}
+honda = UnAuto "AT001LN" [0.5, 0.1, 0.0, 0.2] 2500 95 (25, 10, 2019)
 
 fiat :: Auto
-fiat = UnAuto {
- patente = "DJV214",
- desgasteLlantas = [0.50, 0.1, 0.6, 0.4],
- rpm = 1500,
- temperaturaAgua = 90,
- ultimoArreglo = (04, 05, 2016)
-}
+fiat = UnAuto "DJV214" [0.50, 0.1, 0.6, 0.4] 1500 90 (04, 05, 2016)
 
 ford :: Auto
-ford = UnAuto {
- patente = "DFH029",
- desgasteLlantas = [0.51, 0.1, 0.6, 0.4],
- rpm = 1900,
- temperaturaAgua = 95,
- ultimoArreglo = (25, 10, 2015)
-}
-
+ford = UnAuto "DFH029" [0.51, 0.1, 0.6, 0.4] 1900 95 (25, 10, 2015)
 
 -- Punto 1)
 
