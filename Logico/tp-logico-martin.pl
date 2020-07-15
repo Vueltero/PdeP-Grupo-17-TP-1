@@ -78,13 +78,12 @@ puedeSeguirCon(NombreCamino, Zona) :- camino(NombreCamino, Camino),
                                 limitrofes(Zona, ZonaCamino).
 
 % Punto 5)b)
-sonConsecutivos(NombreCamino1, NombreCamino2) :-                                                 
-                                                 camino(NombreCamino2, Camino2),
+sonConsecutivos(NombreCamino1, NombreCamino2) :- camino(NombreCamino2, Camino2),
                                                  nth1(1, Camino2, Zona2),           % Zona2 es la primer zona del camino2
                                                  puedeSeguirCon(NombreCamino1, Zona2).
 
 % Punto 6)a)                                    
-%tieneLogica(NombreCamino) :- camino(NombreCamino, Camino),
+
 
 
 
