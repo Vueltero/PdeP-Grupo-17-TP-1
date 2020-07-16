@@ -83,7 +83,20 @@ sonConsecutivos(NombreCamino1, NombreCamino2) :- camino(NombreCamino2, Camino2),
                                                  puedeSeguirCon(NombreCamino1, Zona2).
 
 % Punto 6)a)                                    
+logico(NombreCamino):-
+    longitudCamino(NombreCamino,Longitud),
+    Longitud>=2,
+    camino(NombreCamino,Lista),
+    forall((member(Zona1,Lista),nextto(Zona1,Zona2,Lista)),limitrofes(Zona1,Zona2)).
+logico(NombreCamino):-
+    longitudCamino(NombreCamino,Longitud),
+    Longitud<2.
 
+longitudCamino(NombreCamino,Longitud):- 
+    camino(NombreCamino,Lista),
+    length(Lista,Longitud).
+
+%Punto 6)b)
 
 
 
