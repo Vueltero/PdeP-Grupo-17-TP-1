@@ -1,7 +1,8 @@
 
-% Punto 1
+% Punto 1)
 
 % zona(Zona).
+% Quizas este predicado zona/1 no es util. Se podria sacar
 zona(comarca).
 zona(rivendel).
 zona(moria).
@@ -102,3 +103,90 @@ longitudCamino(NombreCamino,Longitud):-
 
 
 
+
+% Punto 7)a)
+regionesDelCamino(NombreCamino, Conjunto) :- 
+    camino(NombreCamino, Camino),
+    findall(Region, (estaEn(Zona, Region), member(Zona,Camino)), Conjunto).
+
+cantidadDeRegiones(NombreCamino, CantidadRegiones) :-
+    regionesDelCamino(NombreCamino, ConjuntoDeRegiones),
+    list_to_set(ConjuntoDeRegiones, Conjunto),
+    length(Conjunto, CantidadRegiones).
+
+% Punto 7)b)
+todosLosCaminosConducenAMordor(NombreCamino) :-     % Esta mal hecho. Es inversible.
+    camino(NombreCamino, Camino),
+    last(Camino, Zona),
+    estaEn(Zona, mordor).
+
+% Punto 8)a)
+
+% viajero(raza(maiar), nombre(Nombre), nivel(Nivel), poderMagico(NivelPoderMagico)).
+viajero(raza(maiar), nombre(gandalfElGris), nivel(25), poderMagico(260)).
+
+% Punto 8)b)
+% i)
+% viajero(raza(elfo), nombre(Nombre), arco(NivelArco), espada(NivelEspada)).
+viajero(raza(elfo), nombre(legolas), arco(29), espada(20)).
+
+% ii)
+% viajero(raza(enano), nombre(Nombre), hacha(NivelHacha)).
+viajero(raza(enano), nombre(gimli), hacha(26)).
+
+% iii)
+% viajero(raza(dunedain), nombre(Nombre), espada(NivelEspada)).
+viajero(raza(dunedain), nombre(aragorn), espada(30)).
+
+% iv)
+% (raza(hombre), nombre(Nombre), espada(NivelEspada)).
+viajero(raza(hombre), nombre(boromir), espada(26)).
+
+% v)
+% viajero(raza(orco), nombre(Nombre), ballesta(NivelBallesta)).
+viajero(raza(orco), nombre(gorbag), ballesta(24)).
+
+% vi)
+% viajero(raza(uruk_hai), nombre(Nombre), espada(NivelEspada), arco(NivelArco)).
+viajero(raza(uruk_hai), nombre(ugluk), espada(26), arco(22)).
+
+% Punto 8)c)
+% viajero(raza(hobbit), nombre(Nombre), edad(Edad)).
+
+% i)
+viajero(raza(hobbit), nombre(frodo), edad(51)).
+
+% ii)
+viajero(raza(hobbit), nombre(sam), edad(36)).
+
+% iii)
+viajero(raza(ent), nombre(barbol), edad(5300)).
+
+
+% Punto 9)a)
+esDeRaza(viajero(raza(Raza), _, _), Raza).              % para viajero/3
+esDeRaza(viajero(raza(Raza), _, _, _), Raza).           % para viajero/4
+
+% Punto 9)b)
+
+
+
+
+
+
+
+
+
+% Punto 10)
+% viajeros(Nombre, Lista).
+viajeros(viajeros1, [gandalfElGris, legolas, gimli, aragorn, boromir, gorbag, ugluk, frodo, sam, barbol]).
+viajeros(viajeros2, [gandalfElGris, legolas, gimli, aragorn, boromir]).
+viajeros(viajeros3, [gorbag, ugluk, frodo, sam, barbol]).
+
+
+
+
+
+%----------------------------------------------------------
+% Faltan punto 6)b) 7)b)
+% El punto 7)b) esta mal hecho
