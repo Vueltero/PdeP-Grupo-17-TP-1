@@ -84,21 +84,20 @@ sonConsecutivos(NombreCamino1, NombreCamino2) :- camino(NombreCamino2, Camino2),
                                                  puedeSeguirCon(NombreCamino1, Zona2).
 
 % Punto 6)a)                                    
-logico(NombreCamino):-
+tieneLogica(NombreCamino):-
     longitudCamino(NombreCamino,Longitud),
     Longitud>=2,
-    camino(NombreCamino,Lista),
-    forall((member(Zona1,Lista),nextto(Zona1,Zona2,Lista)),limitrofes(Zona1,Zona2)).
-logico(NombreCamino):-
+    camino(NombreCamino,ListaCaminos),
+    forall((member(Zona1,ListaCaminos),nextto(Zona1,Zona2,ListaCaminos)),limitrofes(Zona1,Zona2)).
+tieneLogica(NombreCamino):-
     longitudCamino(NombreCamino,Longitud),
     Longitud<2.
 
 longitudCamino(NombreCamino,Longitud):- 
-    camino(NombreCamino,Lista),
-    length(Lista,Longitud).
+    camino(NombreCamino,ListaCaminos),
+    length(ListaCaminos,Longitud).
 
 %Punto 6)b)
-
 
 
 
@@ -119,6 +118,8 @@ todosLosCaminosConducenAMordor(NombreCamino) :-     % Esta mal hecho. Es inversi
     camino(NombreCamino, Camino),
     last(Camino, Zona),
     estaEn(Zona, mordor).
+
+
 
 % Punto 8)a)
 
@@ -168,16 +169,47 @@ esDeRaza(viajero(raza(Raza), _, _), Raza).              % para viajero/3
 esDeRaza(viajero(raza(Raza), _, _, _), Raza).           % para viajero/4
 
 % Punto 9)b)
+%                    viajero          arma
+armasQueManeja(viajero(raza(maiar)), baston).
+armasQueManeja(viajero(raza(hobbit), Nombre, edad(Edad)), daga) :-
+    viajero(raza(hobbit), Nombre, edad(Edad)),
+    forall(viajero(raza(hobbit), Nombre, edad(Edad)), Edad =< 50).
+armasQueManeja(viajero(raza(hobbit), Nombre, edad(Edad)), espadaCorta) :-
+    viajero(raza(hobbit), Nombre, edad(Edad)),
+    forall(viajero(raza(hobbit), Nombre, edad(Edad)), Edad > 50).
+armasQueManeja(viajero(raza(ent)), fuerza).
+
+
+% Punto 9)c)
+% i)
+suNivel(viajero(raza(maiar), nombre(gandalfElGris)), 25).
+
+% ii)
 
 
 
 
+% iii)
+suNivel(viajero(raza(hobbit), nombre(Nombre)), Nivel) :-
+    viajero(raza(hobbit), nombre(Nombre), edad(Edad)),
+    Nivel is Edad / 3.
 
+suNivel(viajero(raza(ent), nombre(Nombre)), Nivel) :- 
+    viajero(raza(ent), nombre(Nombre), edad(Edad)),
+    Nivel is Edad / 100.
+
+
+/*
+raza guerrera (elfo, enano, dúnedain, hombre, orco o uruk-hai)
+*/
 
 
 
 
 % Punto 10)
+
+
+
 % viajeros(Nombre, Lista).
 viajeros(viajeros1, [gandalfElGris, legolas, gimli, aragorn, boromir, gorbag, ugluk, frodo, sam, barbol]).
 viajeros(viajeros2, [gandalfElGris, legolas, gimli, aragorn, boromir]).
