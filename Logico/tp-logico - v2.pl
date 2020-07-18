@@ -131,7 +131,7 @@ cantidadDeRegiones(NombreCamino, CantidadRegiones) :-
     length(Conjunto, CantidadRegiones).
 
 % Punto 7)b)
-todosLosCaminosConducenAMordor(NombreCamino) :-     % Esta mal hecho. Es inversible.
+todosLosCaminosConducenAMordor(NombreCamino) :- 
     forall(camino(NombreCamino, Zonas), ultimaRegionEsMordor(Zonas)).
 	
 ultimaRegionEsMordor(Zonas) :-
