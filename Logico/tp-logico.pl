@@ -100,7 +100,23 @@ longitudCamino(NombreCamino,Longitud):-
 %Punto 6)b)
 
 
+caminoSeguro(Camino) :-
+	camino(Camino, Zonas),
+	zonasSeguras(Zonas).
 
+zonasSeguras(Zonas) :-
+	length(Zonas, Cantidad),
+	Cantidad < 3.
+
+zonasSeguras([Zona1, Zona2, Zona3 | Zonas]) :-
+	estaEn(Zona1, Region1),
+	estaEn(Zona2, Region2),
+	estaEn(Zona3, Region3),
+	not(
+		(Region1 = Region2,
+		Region2 = Region3)
+		),
+	zonasSeguras([Zona2, Zona3 | Zonas]).
 
 
 % Punto 7)a)
