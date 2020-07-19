@@ -1,7 +1,9 @@
 
 %%%%%%%%%%%%%%%%%%%% PUNTO 1 %%%%%%%%%%%%%%%%%%%%
 
+%zona/1
 % zona(Zona).
+
 % Quizas este predicado zona/1 no es util. Se podria sacar
 zona(comarca).
 zona(rivendel).
@@ -14,14 +16,18 @@ zona(minasTirith).
 zona(minasMorgul).
 zona(monteDelDestino).
 
-% region(Region).
+%region/1
+%region(Region).
+
 region(eriador).
 region(montaniasNubladas).
 region(rohan).
 region(gondor).
 region(mordor).
 
-% estaEn(Zona, Region).
+%estaEn/2
+%estaEn(Zona, Region).
+
 estaEn(comarca, eriador).
 estaEn(rivendel, eriador).
 estaEn(moria, montaniasNubladas).
@@ -39,7 +45,9 @@ estaEn(monteDelDestino, mordor).
 % Un camino posible podría ser:
 % Comarca, Rivendel, Moria, Lothlórien, Edoras, Minas Tirith, Minas Morgul, Monte del Destino
 
+%camino/2
 % camino(Nombre, Lista).
+
 camino(camino1, [comarca, rivendel, moria, lothlorien, edoras, minasTirith, minasMorgul, monteDelDestino]).
 camino(camino2, [comarca, rivendel, moria, lothlorien]).
 camino(camino3, [edoras, minasTirith, minasMorgul, monteDelDestino]).
@@ -47,13 +55,17 @@ camino(camino3, [edoras, minasTirith, minasMorgul, monteDelDestino]).
 
 %%%%%%%%%%%%%%%%%%%% PUNTO 3 %%%%%%%%%%%%%%%%%%%%
 
+%sonLimitrofes/2
+%sonLimitrofes(Zona, Region).
+
 sonLimitrofes(rivendel, moria).
 sonLimitrofes(moria, isengard).
 sonLimitrofes(lothlorien, edoras).
 sonLimitrofes(edoras, minasTirith).
 sonLimitrofes(minasTirith, minasMorgul).
 
-% limitrofes(UnaZona, OtraZona).
+%limitrofes/2
+%limitrofes(UnaZona, OtraZona).
 limitrofes(UnaZona, OtraZona) :- 
 	estaEn(UnaZona, Region),
     estaEn(OtraZona, Region),
@@ -65,7 +77,12 @@ limitrofes(X, Y) :- sonLimitrofes(Y, X).
 
 %%%%%%%%%%%%%%%%%%%% PUNTO 4 %%%%%%%%%%%%%%%%%%%%
 
-%% a) regionesLimitrofes(UnaRegion, OtraRegion).
+%% a)
+
+%regionesLimitrofes/2
+%regionesLimitrofes(UnaRegion, OtraRegion).
+
+regionesLimitrofes(UnaRegion, OtraRegion).
 regionesLimitrofes(UnaRegion, OtraRegion) :- 
 	estaEn(UnaZona, UnaRegion),
     estaEn(OtraZona, OtraRegion),
@@ -73,6 +90,10 @@ regionesLimitrofes(UnaRegion, OtraRegion) :-
     UnaRegion \= OtraRegion.
 
 %% b)
+
+%regionesLejanas/2
+%regionesLejanas(Region1, Region2).
+
 regionesLejanas(Region1, Region2) :- 
 	region(Region1),
     region(Region2),
@@ -85,12 +106,20 @@ regionesLejanas(Region1, Region2) :-
 %%%%%%%%%%%%%%%%%%%% PUNTO 5 %%%%%%%%%%%%%%%%%%%%
 
 %% a)
+
+%puedeSeguirCon/2
+%puedeSeguirCon(NombreCamino, Zona).
+
 puedeSeguirCon(NombreCamino, Zona) :- 
 	camino(NombreCamino, Camino),
     last(Camino, ZonaCamino),
     limitrofes(Zona, ZonaCamino).
 
 %% b)
+
+%sonConsecutivos/2
+%sonConsecutivos(NombreCamino1, NombreCamino2).
+
 sonConsecutivos(NombreCamino1, NombreCamino2) :- 
 	camino(NombreCamino2, Camino2),
     nth1(1, Camino2, Zona2),           % Zona2 es la primer zona del camino2
@@ -100,6 +129,10 @@ sonConsecutivos(NombreCamino1, NombreCamino2) :-
 %%%%%%%%%%%%%%%%%%%% PUNTO 6 %%%%%%%%%%%%%%%%%%%%
 
 %% a)
+
+%caminoLogico/1
+%caminoLogico(Camino)
+
 caminoLogico(Camino) :-
 	camino(Camino, Zonas),
 	zonasLogicas(Zonas).
@@ -115,6 +148,10 @@ zonasLogicas([Zona1, Zona2 | Zonas]) :-
 	zonasLogicas([Zona2 | Zonas]).
 
 %% b)
+
+%caminoSeguro/1
+%caminoSeguro(Camino).
+
 caminoSeguro(Camino) :-
 	camino(Camino, Zonas),
 	zonasSeguras(Zonas).
@@ -135,14 +172,18 @@ zonasSeguras([Zona1, Zona2, Zona3 | Zonas]) :-
 
 %% a)
 
-regionesDelCamino(NombreCamino, Conjunto) :- 
-    camino(NombreCamino, Camino),
-    findall(Region, (estaEn(Zona, Region), member(Zona,Camino)), Conjunto).
+%cantidadDeRegiones/2
+%cantidadDeRegiones(NombreCamino, CantidadRegiones).
 
 cantidadDeRegiones(NombreCamino, CantidadRegiones) :-
     regionesDelCamino(NombreCamino, ConjuntoDeRegiones),
     list_to_set(ConjuntoDeRegiones, Conjunto),
     length(Conjunto, CantidadRegiones).
+
+regionesDelCamino(NombreCamino, Conjunto) :- 
+    camino(NombreCamino, Camino),
+    findall(Region, (estaEn(Zona, Region), member(Zona,Camino)), Conjunto).
+
 
 %% b)
 todosLosCaminosConducenAMordor(NombreCamino) :- 
@@ -158,12 +199,12 @@ ultimaRegionEsMordor(Zonas) :-
 %% a)
 
 %viajero(Nombre, maiar(Nivel, PoderMagico)).
-%viajero(Nombre, razaGuerrera(Raza, Arma, Nivel)).
-%viajero(Nombre, razaPacifica(Raza, Edad)).
 
 viajero(gandalfElGris, maiar(25, 260)).
 
 %% b)
+
+%viajero(Nombre, razaGuerrera(Raza, Arma, Nivel)).
 
 viajero(legolas, razaGuerrera(elfo, [arma(arco, 29), arma(espada, 20)])).
 viajero(gimli, razaGuerrera(enano, [arma(hacha, 26)])).
@@ -174,33 +215,25 @@ viajero(ugluk, razaGuerrera(uruk-hai, [arma(espada, 26), arma(arco, 22)])).
 
 %% c)
 
+%viajero(Nombre, razaPacifica(Raza, Edad)).
+
 viajero(frodo, razaPacifica(hobbit, 51)).
 viajero(sam, razaPacifica(hobbit, 36)).
 viajero(barbol, razaPacifica(ent, 5300)).
 
+%tieneElemento/2
 %tieneElemento(NombrePersona, Elemento).
 tieneElemento(legolas, [panDeLembasDelorien, panDeLembasDelorien]).
 
 
 %%%%%%%%%%%%%%%%%%%% PUNTO 9 %%%%%%%%%%%%%%%%%%%%
 
-%Relacionar a los viajeros con distintas características que le son propias:
-%A un viajero con su raza.
-
-%A un viajero con un arma que maneja. Un maiar usa un bastón. Los hobbits manejan una daga hasta los 50 años, y luego una espada corta.
-%Para los ents, en cambio, su arma es su fuerza... ¡créannos que tiene que considerarse un arma!
-
-
-%A un viajero con su nivel.
-%Del maiar, se conoce explícitamente, como ya dijimos.
-%De las razas guerreras (cualquiera sea), es el nivel máximo de manejo de un arma que tenga.
-%De las razas pacifistas, es directamente proporcional a la edad:
-%En el caso de los hobbits, la tercera parte de su edad.
-%En cuanto a los ents, es la centésima parte de su edad.
 
 %% a)
 
 %razaViajero/2
+%razaViajero(Viajero, Raza).
+
 razaViajero(Viajero, Raza) :-
 	viajero(Viajero, Tipo),
 	razaSegunTipo(Tipo, Raza).
@@ -210,6 +243,9 @@ razaSegunTipo(razaGuerrera(Raza,_), Raza).
 razaSegunTipo(razaPacifica(Raza, _), Raza).
 
 %% b)
+
+%razaViajero/2
+%razaViajero(Viajero,Arma).
 
 armaViajero(Viajero, Arma) :-
 	viajero(Viajero, Tipo),
@@ -225,6 +261,9 @@ armaSegunTipo(razaPacifica(hobbit, Edad), espadaCorta):-
 	Edad > 50.
 	
 %% c)
+
+%nivelViajero/2
+%nivelViajero(Viajero, Nivel).
 
 nivelViajero(Viajero, Nivel):-
 	viajero(Viajero, Tipo),
@@ -256,8 +295,32 @@ grupo(grupo1, gandalfElGris).
 
 %%%%%%%%%%%%%%%%%%%% PUNTO 10 %%%%%%%%%%%%%%%%%%%%
 
-%Hacer puedeAtravesar/2 que relaciona una zona y cualquier lista de viajeros (o grupo) posible en la cual dichos viajeros pueden atravesar la zona. 
-%Para poder atravesarla, un grupo debe cumplir con todos los requerimientos de la zona.
+%puedeAtravesar/2
+%puedeAtravesar(Grupo, Zona).
+
+puedeAtravesar(Grupo, Zona) :-
+	grupo(Grupo, _),
+	requerimientosDeZona(Zona, Grupo).
+
+requerimientoDePersonaje(moria, maiar, 24).
+requerimientoDePersonaje(isengard, maiar, 27).
+requerimientoDePersonaje(isengard, elfo, 30).
+
+requerimientoDeElementos(moria, cotaDeMallaMithril, 1).
+requerimientoDeElementos(moria, panDeLembasDelorien, 2).
+
+requerimientoDeMagia(moria, 230).
+
+
+requerimientosDeZona(Lugar, Grupo) :-
+	grupo(Grupo, _),
+	requerimientoDePersonaje(Lugar, Raza, Nivel),
+	requerimientoDeElementos(Lugar, Item, Cantidad),
+	requerimientoDeMagia(Lugar, CantidadDeMagia),
+	grupoCumpleConPersonaje(Grupo, Raza, Nivel),
+	grupoCumpleConElemento(Grupo, Item, Cantidad),
+	grupoCumpleConMagia(Grupo, CantidadDeMagia).
+
 
 grupoCumpleConPersonaje(Grupo, RazaRequerida, NivelRequerido) :-
 	grupo(Grupo, Integrante),
@@ -295,11 +358,6 @@ poderMagico(Viajero, Cantidad) :-
 	razaViajero(Viajero, Raza),
 	poderMagicoSegunRaza(Viajero, Raza, Cantidad).
 
-
-%De los requerimientos de magia, también para un grupo, se conoce el poder mágico total mínimo necesario. 
-%Los elfos tienen un poder mágico igual al doble de su nivel, y los dunedain y enanos a su vez tienen igual poder que su nivel.
-
-
 poderMagicoSegunRaza(Viajero, maiar, Cantidad) :-
 	viajero(Viajero, maiar(_, Cantidad)).
 	
@@ -314,33 +372,10 @@ poderMagicoSegunRaza(Viajero, dunedain, Cantidad) :-
 	nivelViajero(Viajero, Cantidad).
 
 
-requerimientoDePersonaje(moria, maiar, 24).
-requerimientoDePersonaje(isengard, maiar, 27).
-requerimientoDePersonaje(isengard, elfo, 30).
-
-requerimientoDeElementos(moria, cotaDeMallaMithril, 1).
-requerimientoDeElementos(moria, panDeLembasDelorien, 2).
-
-requerimientoDeMagia(moria, 230).
-
-puedeAtravesar(Grupo, Zona) :-
-	grupo(Grupo, _),
-	requerimientosDeZona(Zona, Grupo).
-
-
-requerimientosDeZona(Lugar, Grupo) :-
-	grupo(Grupo, _),
-	requerimientoDePersonaje(Lugar, Raza, Nivel),
-	requerimientoDeElementos(Lugar, Item, Cantidad),
-	requerimientoDeMagia(Lugar, CantidadDeMagia),
-	grupoCumpleConPersonaje(Grupo, Raza, Nivel),
-	grupoCumpleConElemento(Grupo, Item, Cantidad),
-	grupoCumpleConMagia(Grupo, CantidadDeMagia).
-	
-
 %%%%%%%%%%%%%%%%%%%% PUNTO 11 %%%%%%%%%%%%%%%%%%%%
 
-%Hacer seSientenComoEnCasa/2 que relaciona a un grupo y a una región, si el grupo puede atravesar cualquier zona de dicha región.
+%seSientenComoEnCasa/2
+%seSienteComoEnCasa(Grupo, Region).
 
 seSientenComoEnCasa(Grupo, Region) :-
 	grupo(Grupo, _),
