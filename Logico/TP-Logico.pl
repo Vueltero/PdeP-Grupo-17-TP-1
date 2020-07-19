@@ -82,12 +82,11 @@ limitrofes(X, Y) :- sonLimitrofes(Y, X).
 %regionesLimitrofes/2
 %regionesLimitrofes(UnaRegion, OtraRegion).
 
-regionesLimitrofes(UnaRegion, OtraRegion).
 regionesLimitrofes(UnaRegion, OtraRegion) :- 
 	estaEn(UnaZona, UnaRegion),
-    estaEn(OtraZona, OtraRegion),
+    	estaEn(OtraZona, OtraRegion),
 	limitrofes(UnaZona, OtraZona),
-    UnaRegion \= OtraRegion.
+    	UnaRegion \= OtraRegion.
 
 %% b)
 
@@ -96,11 +95,11 @@ regionesLimitrofes(UnaRegion, OtraRegion) :-
 
 regionesLejanas(Region1, Region2) :- 
 	region(Region1),
-    region(Region2),
-    Region1 \= Region2,
-    not(regionesLimitrofes(Region1, Region2)),
-    not((regionesLimitrofes(Region1, Region3),
-         regionesLimitrofes(Region2, Region3))).
+	region(Region2),
+	Region1 \= Region2,
+	not(regionesLimitrofes(Region1, Region2)),
+	not((regionesLimitrofes(Region1, Region3),
+        regionesLimitrofes(Region2, Region3))).
 
 
 %%%%%%%%%%%%%%%%%%%% PUNTO 5 %%%%%%%%%%%%%%%%%%%%
@@ -122,8 +121,8 @@ puedeSeguirCon(NombreCamino, Zona) :-
 
 sonConsecutivos(NombreCamino1, NombreCamino2) :- 
 	camino(NombreCamino2, Camino2),
-    nth1(1, Camino2, Zona2),           % Zona2 es la primer zona del camino2
-    puedeSeguirCon(NombreCamino1, Zona2).
+	nth1(1, Camino2, Zona2),           % Zona2 es la primer zona del camino2
+	puedeSeguirCon(NombreCamino1, Zona2).
 
 
 %%%%%%%%%%%%%%%%%%%% PUNTO 6 %%%%%%%%%%%%%%%%%%%%
