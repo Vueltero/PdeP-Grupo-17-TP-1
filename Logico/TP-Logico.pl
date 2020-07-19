@@ -153,29 +153,6 @@ ultimaRegionEsMordor(Zonas) :-
 	estaEn(Zona, mordor).
 
 
-
-%Modelar a los viajeros, sabiendo que cada viajero tiene un nombre y:
-%De un maiar, se conoce su nivel y su poder mágico.
-%Modelar a Gandalf (el gris), de nivel 25 y poder mágico 260.
-
-
-%De un viajero de una raza guerrera (elfo, enano, dúnedain, hombre, orco o uruk-hai), se conoce la raza en sí y las armas que tiene, junto con el nivel de manejo que tiene con cada una.
-%Modelar a:
-%Légolas, que es un elfo y maneja un arco a nivel 29 y una espada a nivel 20.
-%Gimli, que es un enano que maneja un hacha a nivel 26.
-%Aragorn, que es un dúnedain que maneja una espada a nivel 30.
-%Boromir, que es un hombre que maneja una espada a nivel 26.
-%Gorbag, que es un orco que maneja una ballesta a nivel 24.
-%Úgluk, que es un uruk-hai que maneja una espada a nivel 26 y un arco a nivel 22.
-
-
-%De un viajero de raza pacifista (hobbit o ent), se conoce la edad.
-%Modelar a:
-%Frodo, que es un hobbit de 51 años.
-%Sam, que es un hobbit de 36 años.
-%Bárbol, que es un ent de 5300 años.
-
-
 %%%%%%%%%%%%%%%%%%%% PUNTO 8 %%%%%%%%%%%%%%%%%%%%
 
 %% a)
