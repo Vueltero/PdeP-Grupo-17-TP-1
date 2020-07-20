@@ -1,30 +1,6 @@
 
 %%%%%%%%%%%%%%%%%%%% PUNTO 1 %%%%%%%%%%%%%%%%%%%%
 
-%zona/1
-% zona(Zona).
-
-% Quizas este predicado zona/1 no es util. Se podria sacar
-zona(comarca).
-zona(rivendel).
-zona(moria).
-zona(lothlorien).
-zona(edoras).
-zona(isengard).
-zona(abismoDeHelm).
-zona(minasTirith).
-zona(minasMorgul).
-zona(monteDelDestino).
-
-%region/1
-%region(Region).
-
-region(eriador).
-region(montaniasNubladas).
-region(rohan).
-region(gondor).
-region(mordor).
-
 %estaEn/2
 %estaEn(Zona, Region).
 
@@ -141,8 +117,6 @@ zonasLogicas(Zonas) :-
 	Cantidad < 2.
 
 zonasLogicas([Zona1, Zona2 | Zonas]) :-
-	estaEn(Zona1, _),
-	estaEn(Zona2, _),
 	limitrofes(Zona1,Zona2),
 	zonasLogicas([Zona2 | Zonas]).
 
@@ -160,10 +134,9 @@ zonasSeguras(Zonas) :-
 	Cantidad < 3.
 
 zonasSeguras([Zona1, Zona2, Zona3 | Zonas]) :-
-	estaEn(Zona1, Region1),
-	estaEn(Zona2, Region2),
-	estaEn(Zona3, Region3),
-	not((Region1 = Region2, Region2 = Region3)),
+	estaEn(Zona1, Region),
+	estaEn(Zona2, Region),
+	estaEn(Zona3, Region),
 	zonasSeguras([Zona2, Zona3 | Zonas]).
 
 
