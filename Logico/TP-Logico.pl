@@ -60,9 +60,8 @@ limitrofes(X, Y) :- sonLimitrofes(Y, X).
 
 regionesLimitrofes(UnaRegion, OtraRegion) :- 
 	estaEn(UnaZona, UnaRegion),
-    	estaEn(OtraZona, OtraRegion),
 	limitrofes(UnaZona, OtraZona),
-    	UnaRegion \= OtraRegion.
+   	estaEn(OtraZona, OtraRegion).
 
 %% b)
 
@@ -70,12 +69,15 @@ regionesLimitrofes(UnaRegion, OtraRegion) :-
 %regionesLejanas(Region1, Region2).
 
 regionesLejanas(Region1, Region2) :- 
-	region(Region1),
-	region(Region2),
+	estaEn(_, Region1),
+	estaEn(_, Region2),
 	Region1 \= Region2,
 	not(regionesLimitrofes(Region1, Region2)),
-	not((regionesLimitrofes(Region1, Region3),
-        regionesLimitrofes(Region2, Region3))).
+	not(regionEnComun(Region1, Region2)).
+	
+regionEnComun(Region1, Region2) :-
+	regionesLimitrofes(Region1, Region3),
+    regionesLimitrofes(Region2, Region3).
 
 
 %%%%%%%%%%%%%%%%%%%% PUNTO 5 %%%%%%%%%%%%%%%%%%%%
