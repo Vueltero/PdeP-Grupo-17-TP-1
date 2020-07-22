@@ -99,8 +99,8 @@ puedeSeguirCon(NombreCamino, Zona) :-
 
 sonConsecutivos(NombreCamino1, NombreCamino2) :- 
 	camino(NombreCamino2, Camino2),
-	nth1(1, Camino2, Zona2),           % Zona2 es la primer zona del camino2
-	puedeSeguirCon(NombreCamino1, Zona2).
+	nth1(1, Camino2, PrimerZonaCamino2),
+	puedeSeguirCon(NombreCamino1, PrimerZonaCamino2).
 
 
 %%%%%%%%%%%%%%%%%%%% PUNTO 6 %%%%%%%%%%%%%%%%%%%%
@@ -241,16 +241,15 @@ armaSegunTipo(razaPacifica(hobbit, Edad), espadaCorta):-
 
 nivelViajero(Viajero, Nivel):-
 	viajero(Viajero, Tipo),
-	nivelSegunTipo(Viajero, Tipo, Nivel).
+	nivelSegunTipo(Tipo, Nivel).
 
-nivelSegunTipo(_, maiar(Nivel,_), Nivel).
-nivelSegunTipo(Viajero, _, NivelDeArma) :-
-	viajero(Viajero, razaGuerrera(_, Armas)),
+nivelSegunTipo(maiar(Nivel,_), Nivel).
+nivelSegunTipo(razaGuerrera(_, Armas), NivelDeArma) :-
 	nivelDeArmas(Armas, NivelDeArma),
 	forall(nivelDeArmas(Armas, OtroNivel), (NivelDeArma >= OtroNivel)).
-nivelSegunTipo(_, razaPacifica(hobbit, Edad), Nivel) :-
+nivelSegunTipo(razaPacifica(hobbit, Edad), Nivel) :-
 	calculoRazaPacifica(Edad, 3, Nivel).
-nivelSegunTipo(_, razaPacifica(ent, Edad), Nivel) :-
+nivelSegunTipo(razaPacifica(ent, Edad), Nivel) :-
 	calculoRazaPacifica(Edad, 100, Nivel).
 
 nivelDeArmas(Armas, Nivel) :-
