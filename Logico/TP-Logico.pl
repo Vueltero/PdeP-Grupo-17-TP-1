@@ -268,61 +268,41 @@ grupo(grupo1, gandalfElGris).
 
 %%%%%%%%%%%%%%%%%%%% PUNTO 10 %%%%%%%%%%%%%%%%%%%%
 
+requerimiento(moria, personaje(maiar, 24)).
+requerimiento(moria, elemento(cotaDeMallaMithril, 1)).
+requerimiento(moria, poder(200)).
+
+
 %puedeAtravesar/2
 %puedeAtravesar(Grupo, Zona).
 
 puedeAtravesar(Grupo, Zona) :-
 	grupo(Grupo, _),
-	requerimientosDeZona(Zona, Grupo).
+	estaEn(Zona, _),
+	forall(requerimiento(Zona, Requerimiento), cumpleCon(Grupo, Requerimiento)).
 
-requerimientoDePersonaje(moria, maiar, 24).
-requerimientoDePersonaje(isengard, maiar, 27).
-requerimientoDePersonaje(isengard, elfo, 30).
-
-requerimientoDeElementos(moria, cotaDeMallaMithril, 1).
-requerimientoDeElementos(moria, panDeLembasDelorien, 2).
-
-requerimientoDeMagia(moria, 230).
-
-
-requerimientosDeZona(Lugar, Grupo) :-
-	grupo(Grupo, _),
-	requerimientoDePersonaje(Lugar, Raza, Nivel),
-	requerimientoDeElementos(Lugar, Item, Cantidad),
-	requerimientoDeMagia(Lugar, CantidadDeMagia),
-	grupoCumpleConPersonaje(Grupo, Raza, Nivel),
-	grupoCumpleConElemento(Grupo, Item, Cantidad),
-	grupoCumpleConMagia(Grupo, CantidadDeMagia).
-
-
-grupoCumpleConPersonaje(Grupo, RazaRequerida, NivelRequerido) :-
-	grupo(Grupo, Integrante),
-	razaViajero(Integrante, RazaRequerida),
-	nivelViajero(Integrante, Nivel),
+cumpleCon(Grupo, personaje(RazaRequerida, NivelRequerido)) :-
+	grupo(Grupo, Miembro),
+	razaViajero(Miembro, RazaRequerida),
+	nivelViajero(Miembro, Nivel),
 	Nivel >= NivelRequerido.
 
-grupoCumpleConElemento(Grupo, Item, CantidadRequerida) :-
-	grupo(Grupo, _),
-	cantidadDeUnElemento(Item, Grupo, Cantidad),
+cumpleCon(Grupo, elemento(Elemento, CantidadRequerida)) :-
+	findall(Elemento, grupoTieneItem(Grupo, Elemento), Elementos),
+	length(Elementos, Cantidad),
 	Cantidad >= CantidadRequerida.
 
-cantidadDeUnElemento(Item, Grupo, Cantidad) :-
-	grupo(Grupo, _),
-	findall(Item, integranteTieneItem(Grupo, Item), CantidadDeItems),
-	length(CantidadDeItems, Cantidad).
-
-integranteTieneItem(Grupo, Item) :-
+grupoTieneItem(Grupo, Item) :-
 	grupo(Grupo, Integrante),
 	tieneElemento(Integrante, Elementos),
 	member(Item, Elementos).
 
-grupoCumpleConMagia(Grupo, CantMagiaRequerida) :-
-	grupo(Grupo, _),
-	findall(PoderMagico, poderMagicoDelIntegrante(Grupo, PoderMagico), PoderesMagicos),
-	sum_list(PoderesMagicos, Cantidad),
-	Cantidad >= CantMagiaRequerida.
+cumpleCon(Grupo, poder(CantidadRequerida)) :-
+	findall(PoderMagico, poderMagicoDeGrupo(Grupo, PoderMagico), PoderesMagicos),
+	sum_list(PoderesMagicos, CantidadTotalDeMagia),
+	CantidadTotalDeMagia >= CantidadRequerida.
 
-poderMagicoDelIntegrante(Grupo, PoderMagico) :-
+poderMagicoDeGrupo(Grupo, PoderMagico) :-
 	grupo(Grupo, Integrante),
 	poderMagico(Integrante, PoderMagico).
 
